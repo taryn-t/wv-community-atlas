@@ -67,7 +67,7 @@ export default function WVCountiesMap() {
 
   const onEachFeature = (feature: Feature, layer: L.Layer) => {
     const props: any = feature.properties ?? {};
-    const name = props.NAME ?? props.name ?? props.NAMELSAD ?? "Couty";
+    const name = props.NAME ?? props.name ?? props.NAMELSAD ?? "County";
     const id = String(props.GEOID ?? props.COUNTYFP ?? props.NAME ?? props.name);
 
     layer.on({
