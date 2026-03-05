@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0B0F2B;
+  --foreground: #333554;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #0B0F2B;
+    --foreground: #ededed;
+    --primary-100:#FFC107;
+    --primary-200:#dda400;
+    --primary-300:#916400;
+    --accent-100:#00BCD4;
+    --accent-200:#005e74;
+    --text-100:#FFFFFF;
+    --text-200:#9c9c9c;
+    --bg-100:#0B0F2B;
+    --bg-200:#1a1e3b;
+    --bg-300:#333554;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0B0F2B;
     --foreground: #ededed;
+    --primary-100:#FFC107;
+    --primary-200:#dda400;
+    --primary-300:#916400;
+    --accent-100:#00BCD4;
+    --accent-200:#005e74;
+    --text-100:#FFFFFF;
+    --text-200:#9c9c9c;
+    --bg-100:#0B0F2B;
+    --bg-200:#1a1e3b;
+    --bg-300:#333554;
+      
   }
 }
+
+
+
+/* Tablets */
+@media (min-width: 768px) {
+ 
+}
+
+/* Laptops */
+@media (min-width: 1024px) {
+ 
+}
+
+/* Large desktops */
+@media (min-width: 1280px) {
+ 
+
+}
+
+
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100vh;
+}
+main{
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+ 
+}
+.content{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+}
+
+
+.side-bar{
+  background: inherit;
+  height: 100%;
+  width: 400px;
+  border-left: 1px solid var(--bg-200); 
+}
+
+
+.map-container{
+  flex: 1;
+  height: 100%;
+  width: 100%;
 }
