@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "leaflet-defaulticon-compatibility": "^0.1.2",
+    "mongodb": "7.1",
+    "mongoose": "^9.3.0",
     "motion": "^12.35.0",
     "next": "16.1.6",
     "react": "19.2.3",
