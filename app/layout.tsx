@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Navigation/Sidebar";
+import MapNav from "@/components/Navigation/MapNav";
+import MapProvider from "@/lib/context/map-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,12 +30,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="content">
-          <main >
-            {children}
-          </main>
-          <Sidebar />
-        </div>
+        <MapProvider>
+          <div className="content">
+            <main >
+              
+              {children}
+            </main>
+            <Sidebar />
+          </div>
+        </MapProvider>
+       
         
       </body>
     </html>

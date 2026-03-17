@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "axios": "^1.13.6",
+    "flowbite": "^4.0.1",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "mongodb": "7.1",
     "mongoose": "^9.3.0",

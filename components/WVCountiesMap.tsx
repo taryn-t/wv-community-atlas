@@ -5,6 +5,7 @@ import { GeoJSON, MapContainer, TileLayer, useMap } from "react-leaflet";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import MapNav from "./Navigation/MapNav";
 
 function FitToFeature({ feature }: { feature: Feature<Geometry> | null }) {
   const map = useMap();
@@ -21,7 +22,7 @@ function FitToFeature({ feature }: { feature: Feature<Geometry> | null }) {
 export default function WVCountiesMap() {
   const [data, setData] = useState<FeatureCollection | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
+  const [countyFP, setCountyFP] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/geo/WestVirginia_Counties.geojson")
@@ -83,11 +84,12 @@ export default function WVCountiesMap() {
         <button onClick={() => setSelectedId(null)}>Show all</button>
         {selectedId && <span style={{ marginLeft: 8 }}>Selected: {selectedId}</span>}
       </div> */}
-
-      <MapContainer center={[38.6, -80.6]} zoom={7} style={{ height: "100%", width:"100%" }}>
+      <MapNav />
+      <MapContainer center={[38.6, -80.6]} zoom={7} style={{ height: "100%", width:"100%", zIndex: "1" }}>
+        
         <TileLayer
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="© OpenStreetMap contributors"
+          attribution="© OpenStreetMap"
           maxZoom={19}
         />
         {filteredData && (
