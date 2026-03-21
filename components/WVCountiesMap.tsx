@@ -6,6 +6,8 @@ import type { Feature, FeatureCollection, Geometry } from "geojson";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import MapNav from "./Navigation/MapNav";
+import useMapData from "@/lib/hooks/useMapData";
+import CountyLayer from "./CountyLayer";
 
 function FitToFeature({ feature }: { feature: Feature<Geometry> | null }) {
   const map = useMap();
@@ -21,9 +23,8 @@ function FitToFeature({ feature }: { feature: Feature<Geometry> | null }) {
 
 export default function WVCountiesMap() {
   const [data, setData] = useState<FeatureCollection | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [countyFP, setCountyFP] = useState<string | null>(null);
-
+  const {measurements} = useMapData();
   useEffect(() => {
     fetch("/geo/WestVirginia_Counties.geojson")
       .then((r) => r.json())
@@ -32,57 +33,15 @@ export default function WVCountiesMap() {
   }, []);
 
 
-  const selectedFeature = useMemo(() => {
-    if (!data || !selectedId) return null;
-    return data.features.find((f) => {
-      const props: any = f.properties ?? {};
-      return String(props.GEOID ?? props.COUNTYFP ?? props.NAME ?? props.name) === selectedId;
-    }) ?? null;
-  }, [data, selectedId]);
+  
 
-  const filteredData = useMemo<FeatureCollection | null>(() => {
-    if (!data) return null;
-    if (!selectedId) return data;
-    return {
-      ...data,
-      features: data.features.filter((f) => {
-        const props: any = f.properties ?? {};
-        return String(props.GEOID ?? props.COUNTYFP ?? props.NAME ?? props.name) === selectedId;
-      }),
-    };
-  }, [data, selectedId]);
 
-  const s = (feature?: Feature<Geometry, any>) => {
-    if (!feature) return {};
-    const props: any = feature.properties ?? {};
-    const id = String(props.GEOID ?? props.COUNTYFP ?? props.NAME ?? props.name);
-
-    const isSelected = selectedId ? id === selectedId : false;
-
-    return {
-      weight: isSelected ? 3 : 1,
-      opacity: 1,
-      fillOpacity: isSelected ? 0.35 : 0.15,
-    };
-  };
-
-  const onEachFeature = (feature: Feature, layer: L.Layer) => {
-    const props: any = feature.properties ?? {};
-    const name = props.NAME ?? props.name ?? props.NAMELSAD ?? "County";
-    const id = String(props.GEOID ?? props.COUNTYFP ?? props.NAME ?? props.name);
-
-    layer.on({
-      click: () => setSelectedId(id),
-    });
-
-    (layer as L.Path).bindTooltip(String(name), { sticky: true });
-  };
-
+ 
   return (
     <div className="map-container" >
       {/* <div>
-        <button onClick={() => setSelectedId(null)}>Show all</button>
-        {selectedId && <span style={{ marginLeft: 8 }}>Selected: {selectedId}</span>}
+        <button onClick={() => setselectedCounty(null)}>Show all</button>
+        {selectedCounty && <span style={{ marginLeft: 8 }}>Selected: {selectedCounty}</span>}
       </div> */}
       <MapNav />
       <MapContainer center={[38.6, -80.6]} zoom={7} style={{ height: "100%", width:"100%", zIndex: "1" }}>
@@ -92,11 +51,11 @@ export default function WVCountiesMap() {
           attribution="© OpenStreetMap"
           maxZoom={19}
         />
-        {filteredData && (
-          <GeoJSON data={filteredData} style={s} onEachFeature={onEachFeature} />
+        { measurements && data &&  (
+          <CountyLayer geoJson={data} measurements={measurements} />
         )}
 
-        <FitToFeature feature={selectedFeature} />
+        
       </MapContainer>
     </div>
   );
