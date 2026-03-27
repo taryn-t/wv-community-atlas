@@ -93,7 +93,7 @@ button{
   background: inherit;
   height: 100%;
   width: 500px;
-
+  overflow-y: scroll;
   padding: 16px;
 
 }
@@ -107,7 +107,7 @@ button{
   grid-template-rows: repeat(1fr,auto);
   grid-row-gap: 20px;
   place-items: start;
-  overflow-y: scroll;
+
 }
 
 .selected-data{
