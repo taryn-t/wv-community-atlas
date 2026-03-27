@@ -2,7 +2,10 @@ import { MongoClient } from "mongodb";
 import {
   countiesCollection,
   indicatorsCollection,
-  measurementsCollection
+  measurementsCollection,
+  savedViewsCollection,
+  summariesCollection,
+  usersCollection
 } from "./collections";
 
 const uri = process.env.MONGODB_URI!;
@@ -32,6 +35,9 @@ export const dbCollections = {
   counties: () => countiesCollection(),
   indicators: () => indicatorsCollection(),
   measurements: () => measurementsCollection(),
+  summaries: () => summariesCollection(),
+  users: () => usersCollection(),
+  savedViews: () => savedViewsCollection(),
 };
 
 export async function getDb() {

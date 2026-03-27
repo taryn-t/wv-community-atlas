@@ -1,5 +1,5 @@
 import { getDb } from "@/lib/mongodb";
-import { indicators } from "@/lib/indicators";
+import { getVariablesForYear, IndicatorConfig, indicators } from "@/lib/indicators";
 import { fetchAcsRows } from "@/lib/acs";
 import { validateYear } from "@/lib/validation";
 import { buildCountyUpsertOp } from "@/lib/counties";
@@ -18,11 +18,18 @@ export async function runIndicatorIngestion({
   console.log("year validated");
 
   const indicator = indicators.find((i) => i.key === indicatorKey);
-  console.log("indicator lookup result", indicator);
 
   if (!indicator) {
     throw new Error(`Unknown indicatorKey: ${indicatorKey}`);
   }
+  console.log("indicator lookup result", indicator);
+
+  const variables = getVariablesForYear(indicator, year);
+
+  if (!variables) {
+    throw new Error(`Indicator ${indicator.key} does not support year ${year}`);
+  }
+  console.log("year config found", variables);
 
   const db = await getDb();
   console.log("db connected");
@@ -35,7 +42,8 @@ export async function runIndicatorIngestion({
         name: indicator.name,
         category: indicator.category,
         dataset: indicator.dataset,
-        variables: indicator.variables,
+        type: indicator.type,
+        availableYears: Object.keys(indicator.yearConfigs).map(Number),
         updatedAt: new Date(),
       },
     },
@@ -43,7 +51,7 @@ export async function runIndicatorIngestion({
   );
   console.log("indicator upserted");
 
-  const rows = await fetchAcsRows(year, indicator.variables);
+  const rows = await fetchAcsRows(year, variables);
   console.log("ACS rows fetched", rows.length);
 
   const countyOps = rows.map(buildCountyUpsertOp);
@@ -60,7 +68,9 @@ export async function runIndicatorIngestion({
   }
 
   if (measurementOps.length > 0) {
-    await db.collection("measurements").bulkWrite(measurementOps, { ordered: false });
+    await db.collection("measurements").bulkWrite(measurementOps, {
+      ordered: false,
+    });
     console.log("measurement bulkWrite complete");
   }
 

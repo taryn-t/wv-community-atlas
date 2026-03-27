@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authorizeIngestRequest, validateYear } from "@/lib/validation";
-import { indicators } from "@/lib/indicators";
+import { indicators, supportsYear } from "@/lib/indicators";
 import { runIndicatorIngestion } from "@/lib/ingest";
 
 export async function POST(req: NextRequest) {
@@ -12,6 +12,10 @@ export async function POST(req: NextRequest) {
 
     validateYear(year);
 
+    const eligibleIndicators = indicators.filter((indicator) =>
+      supportsYear(indicator, year)
+    );
+
     const results: Array<{
       indicatorKey: string;
       success: boolean;
@@ -19,7 +23,7 @@ export async function POST(req: NextRequest) {
       error?: string;
     }> = [];
 
-    for (const indicator of indicators) {
+    for (const indicator of eligibleIndicators) {
       try {
         console.log(`Starting ingestion for ${indicator.key} (${year})`);
 
@@ -52,7 +56,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: failed === 0,
       year,
-      totalIndicators: indicators.length,
+      totalIndicators: eligibleIndicators.length,
       succeeded,
       failed,
       results,

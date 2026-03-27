@@ -6,8 +6,10 @@ export function buildMeasurementDocument(
   year: number
 ) {
   const countyFips = `${row.state}${row.county}`;
-  const value = indicator.transform ? indicator.transform(row) : null;
-
+  const value = indicator.transform
+    ? indicator.transform(row, year, indicator)
+    : null;
+    
   return {
     countyFips,
     indicatorKey: indicator.key,
@@ -32,7 +34,9 @@ export function buildMeasurementUpsertOp(
         indicatorKey: doc.indicatorKey,
         year: doc.year,
       },
-      update: { $set: doc },
+      update: {
+        $set: doc,
+      },
       upsert: true,
     },
   };

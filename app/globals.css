@@ -89,15 +89,55 @@ button{
   height: 100%;
 
 }
-
-
 .side-bar{
   background: inherit;
   height: 100%;
-  width: 400px;
-  border-left: 1px solid var(--bg-200); 
+  width: 450px;
+
+  padding: 16px;
+
 }
 
+.data-panel{
+  background: inherit;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(1fr,auto);
+  grid-row-gap: 20px;
+  place-items: start;
+  overflow-y: scroll;
+}
+
+.selected-data{
+  background-color: var(--bg-200);
+  color: var(--text-100);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 10px;
+  padding: 16px;
+}
+.side-bar > div,.data-panel > div{
+  height: fit-content;
+  width: 100%;
+}
+.side-bar h2{
+  font-size: var(--text-xl);
+  font-weight: bold;
+  margin-bottom: 10px;
+  
+}
+.side-bar h3{
+  font-size: var(--text-lg);
+  font-weight: bold;
+ padding-bottom: 10px;
+  border-bottom: 1px solid var(--primary-300);
+}
+
+.side-bar p{
+  padding: 8px;
+  font-size: var(--text-lg);
+}
 
 .map-container{
   flex: 1;
@@ -112,6 +152,9 @@ button{
   top: 10px;
   right: 10px;
   z-index: 1000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 10px;
 }
 
 .map-filter{
@@ -130,13 +173,45 @@ button{
   font-size: var(--text-sm);
   align-items: center;
   justify-items: start;
-  margin-top: 5px;
+  top: 50px;
+  left: 100px;
+}
+
+
+.year-filter{
+    position: absolute;
+  z-index: 1000;
+  background-color: var(--bg-200);
+  color: var(--text-200);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-flow: row;
+  width: 88px;
+  height: fit-content;
+  overflow-y: scroll;
+  font-size: var(--text-sm);
+  align-items: center;
+  justify-items: start;
+  top: 50px;
+ 
 }
 
 .map-filter > .indicator {
   padding: 8px;
   width: 100%;
   border-bottom: 1px solid var(--bg-300);
+}
+.year-filter > .year-btn {
+  padding: 8px;
+  width: 100%;
+  border-bottom: 1px solid var(--bg-300);
+}
+.year-filter> .selected{
+  background-color: var(--bg-300);
+  color: var(--text-100);
+  font-weight: bold;
 }
 
 .map-filter > .selected{
