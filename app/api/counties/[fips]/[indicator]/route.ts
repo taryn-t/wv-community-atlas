@@ -4,10 +4,10 @@ import { getDb } from "@/lib/mongodb";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ fips: string, indicatorKey: string }> }
+  { params }: { params: Promise<{ fips: string, indicator: string }> }
 ) {
   try {
-    const { fips , indicatorKey} = await params;
+    const { fips , indicator} = await params;
 
     const counties = await countiesCollection();
     const county = await counties.findOne({ fips });
@@ -20,7 +20,7 @@ export async function GET(
     const summary = await db
       .collection("summaries")
       .find(
-        { countyFips: fips, indicatorKey: indicatorKey },
+        { countyFips: fips, indicatorKey: indicator },
         {
           projection: {
             _id: 0,
