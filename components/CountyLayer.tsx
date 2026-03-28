@@ -31,9 +31,9 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
   const [popupPosition, setPopupPosition] = useState<L.LatLng | null>(null);
   const addingCountyRef = useRef(addingCounty);
 
-  useEffect(() => {
-  handleSelectedCounty(null);
-}, [selectedIndicator, handleSelectedCounty]);
+  // useEffect(() => { 
+  //   handleSelectedCounty(null);
+  // }, [selectedIndicator, handleSelectedCounty]);
   
   const countiesRef = useRef(counties);
 
@@ -46,8 +46,12 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
   }, [addingCounty]);
 
 
-  useEffect(() => {
-    countiesRef.current = counties;
+  useLayoutEffect(() => {
+    if (countiesRef){
+      countiesRef.current = counties;
+    }
+    console.log("CountyLayer counties updated:");
+    console.log(counties);
     
   }, [counties]);
 
@@ -78,31 +82,35 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
   }, [measurements]);
 
   const style = useMemo(() => {
-    return (feature: any) => {
-      const countyFips = feature?.properties?.GEOID;
-      const value = measurementMap.get(countyFips);
-      const isSelected = counties?.some((c) => c && c.countyFips === countyFips) ?? false;
+  return (feature: any) => {
+    const countyFips = feature?.properties?.GEOID;
+    const value = measurementMap.get(countyFips);
 
-      if (value == null || Number.isNaN(value)) {
-        return {
-          fillColor: "#cccccc",
-          fillOpacity: 0.7,
-          color: isSelected ? "#000000" : "#ffffff",
-          weight: isSelected ? 3 : 1,
-        };
-      }
+    const isSelected = counties?.some(
+      (c) => c && c.countyFips === countyFips
+    );
 
-      const t = normalize(value, minValue, maxValue);
-      const fillColor = lerpColor(lowColor, highColor, t);
-
+    if (value == null || Number.isNaN(value)) {
       return {
-        fillColor,
-        fillOpacity: 0.85,
+        fillColor: "#cccccc",
+        fillOpacity: 0.7,
         color: isSelected ? "#000000" : "#ffffff",
         weight: isSelected ? 3 : 1,
       };
+    }
+
+    const t = normalize(value, minValue, maxValue);
+    const fillColor = lerpColor(lowColor, highColor, t);
+
+    return {
+      fillColor,
+      fillOpacity: 0.85,
+      color: isSelected ? "#00BCD4" : "#ffffff",
+      weight: isSelected ? 5 : 1,
+     
     };
-  }, [measurementMap, minValue, maxValue, counties]);
+  };
+}, [measurementMap, minValue, maxValue, counties]);
 
   const MAX_COUNTIES = 3;
 
@@ -136,12 +144,21 @@ const onEachFeature = (feature: any, layer: any) => {
         });
       } 
       else if (current.length <= MAX_COUNTIES && ! addingCountyRef.current) {
+       
         handleSelectedCounty({
           countyFips,
           countyName,
         });
+
+        if (countiesRef.current && countiesRef.current.length > 0) {
+          const updated = [...countiesRef.current];
+          updated[updated.length - 1] = { countyFips, countyName };
+          handleSetCounties(updated);
+        } 
+        else {
+          handleSetCounties([{ countyFips, countyName }]);
+        }
         
-        handleSetCounties([{ countyFips, countyName }]);
       }
     },
   });
@@ -189,7 +206,7 @@ const handleAddCounty = (c: { countyFips: string; countyName: string }) => {
       </div>
 
       <GeoJSON
-        key={`${selectedIndicator}-${addingCounty}`}
+        key={`${selectedIndicator}-${addingCountyRef.current}-${counties ?? []}`}
         data={geoJson}
         style={style}
         onEachFeature={onEachFeature}
