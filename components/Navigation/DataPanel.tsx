@@ -17,11 +17,29 @@ function valuetext(value: number) {
 }
 
 
-export default function DataPanel({ countyData, yearRange, handleChange, rangeData }: { countyData: any, yearRange: number[], handleChange: (event: Event, newValue: number[], activeThumb: number) => void, rangeData: any }) {
+type RangeData = {
+  countyFips: string;
+  startValue: number | null;
+  endValue: number | null;
+  absChange: number | null;
+  pctChange: number | null;
+};
+
+export default function DataPanel({ countyData, yearRange, handleChange, rangeData }: {
+    countyData: any;
+    yearRange: number[];
+    handleChange: (event: Event, newValue: number | number[], activeThumb: number) => void;
+    rangeData: RangeData | null;
+    })
+    {
+
     const { counties, selectedYear } = useMapData();
    
-
-
+    
+    useEffect(() => {
+        console.log("Range data:");
+        console.log(rangeData);
+    }, [rangeData]);
 
     return(
 
@@ -83,28 +101,22 @@ export default function DataPanel({ countyData, yearRange, handleChange, rangeDa
                            
 
                                 {rangeData ? (
-                                    <div className="range-summary" >
-                                        <h3>
-                                            {yearRange[0]} Value
-                                        </h3>
+                                    <div className="range-summary">
+                                        <h3>{yearRange[0]} Value</h3>
                                         <p>{parseNumber(rangeData.startValue)}</p>
-                                        <h3>
-                                            {yearRange[1]} Value
-                                        </h3>
+
+                                        <h3>{yearRange[1]} Value</h3>
                                         <p>{parseNumber(rangeData.endValue)}</p>
-                                        <h3>
-                                            Absolute Change ({yearRange[0]} to {yearRange[1]})
-                                        </h3>
+
+                                        <h3>Absolute Change ({yearRange[0]} to {yearRange[1]})</h3>
                                         <p>{parseNumber(rangeData.absChange)}</p>
-                                        <h3>
-                                            Percent Change ({yearRange[0]} to {yearRange[1]})
-                                        </h3>
-                                        <p>{parseNumber(rangeData.pctChange)}%</p> 
+
+                                        <h3>Percent Change ({yearRange[0]} to {yearRange[1]})</h3>
+                                        <p>{parseNumber(rangeData.pctChange)}%</p>
                                     </div>
-                                    
-                                ) : (
-                                    <p>No range summary data available for this indicator.</p>
-                                )}
+                                    ) : (
+                                    <p>No range data available for the selected county and indicator.</p>
+                                    )}
 
                         </div>
                         

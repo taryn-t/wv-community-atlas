@@ -24,20 +24,37 @@ export default function Sidebar() {
      const[yearRange, setYearRange] = useState<number[]>([ACS_YEARS_CLIENT[0], ACS_YEARS_CLIENT[ACS_YEARS_CLIENT.length - 1]]);
     const [rangeData, setRangeData] = useState<any>(null);
     
-    useEffect(() => { 
-        fetch(
-            `/api/range-summary?fips=${selectedCounty?.countyFips}&indicatorKey=${selectedIndicator}&startYear=${yearRange[0]}&endYear=${yearRange[1]}`,
-            { cache: "no-store" }
-        )
-        .then((res) => res.json())
-        .then((data) => {
-            setRangeData(data.data[0]);
-        })
-        .catch((err) => {
+    useLayoutEffect(() => {
+    if (!counties || counties.length === 0 || !selectedIndicator) {
+        setRangeData([]);
+        return;
+    }
+
+    async function loadRangeData() {
+        try {
+            const results = await Promise.all(
+                counties!.map(async (county) => {
+                    if (!county) return null;
+
+                    const res = await fetch(
+                        `/api/range-summary?fips=${county.countyFips}&indicatorKey=${selectedIndicator}&startYear=${yearRange[0]}&endYear=${yearRange[1]}`,
+                        { cache: "no-store" }
+                    );
+
+                    const data = await res.json();
+
+                    return data.data?.[0] ?? null;
+                })
+            );
+
+            setRangeData(results.filter((r) => r !== null));
+        } catch (err) {
             console.error("Error fetching range data:", err);
-        });
-            
-     }, [selectedCounty, selectedIndicator,yearRange])  
+        }
+    }
+
+    loadRangeData();
+}, [counties, selectedIndicator, yearRange]);  
     
     const handleChange = (event: Event, newValue: number[], activeThumb: number) => {
             if (activeThumb === 0) {
@@ -139,11 +156,22 @@ export default function Sidebar() {
             <div className="data-grid" style={{padding: 16, gridRow: "2 span 1", gridColumn: `span ${countyData.length}`}}>
                 <CountySelection colSpan={`span ${countyData.length}`} />
                 <div className="data-panels" style={{gap: 16,gridColumn: `span ${countyData.length}`}}>
-                    {countyData && countyData.length > 0 ? 
-                    countyData.map((data,index) => (
-                        <DataPanel key={`${data.county?.fips ?? index}_data-panel`} countyData={data} yearRange={yearRange} handleChange={handleChange} rangeData={rangeData} />
-                    ))
-                     : null}
+                   {countyData && countyData.length > 0
+                    ? countyData.map((data, index) => {
+                        const matchingRangeData =
+                            rangeData.find((r) => r?.countyFips === data.county?.fips) ?? null;
+
+                        return (
+                            <DataPanel
+                            key={`${data.county?.fips ?? index}_data-panel`}
+                            countyData={data}
+                            yearRange={yearRange}
+                            handleChange={handleChange}
+                            rangeData={matchingRangeData}
+                            />
+                        );
+                        })
+                    : null}
                 </div>
                 <div className="selected-data" style={{margin: "0 ", gridColumn: `span ${countyData.length}`, minWidth: 350}} >
                         <h2>{`${countyData[0]?.indicators?.name ?? selectedIndicator} Trend \n (${yearRange[0]} to ${yearRange[1]})`}</h2>
