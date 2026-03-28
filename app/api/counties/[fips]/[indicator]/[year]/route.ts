@@ -3,10 +3,11 @@ import { countiesCollection } from "@/lib/collections";
 import { getDb } from "@/lib/mongodb";
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ fips: string; indicator: string; year: string }> }
 ) {
   try {
+
     const { fips, indicator, year } = await params;
     const parsedYear = Number(year);
     console.log(indicator)

@@ -60,27 +60,43 @@ const MapContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleSetAddingCounty = useCallback((adding: boolean) => setAddingCounty(adding), []);
 
   const contextValue = useMemo<MapContextProps>(
-    () => ({
-      selectedCounty,
-      handleSelectedCounty,
-      measurements,
-      handleSetMeasurement,
-      indicators,
-      handleSetIndicators,
-      compareCounty,
-      handleSetCompareCounty,
-      selectedIndicator,
-      handleSetselectedIndicator,
-      selectedYear,
-      handleSetSelectedYear,
-      counties,
-      handleSetCounties,
-      addingCounty,
-      handleSetAddingCounty
-
-    }),
-    [selectedCounty, handleSelectedCounty, measurements, handleSetMeasurement, indicators, handleSetIndicators, compareCounty, handleSetCompareCounty, selectedIndicator, handleSetselectedIndicator, selectedYear,handleSetSelectedYear, counties, handleSetCounties]
-  );
+  () => ({
+    selectedCounty,
+    handleSelectedCounty,
+    measurements,
+    handleSetMeasurement,
+    indicators,
+    handleSetIndicators,
+    compareCounty,
+    handleSetCompareCounty,
+    selectedIndicator,
+    handleSetselectedIndicator,
+    selectedYear,
+    handleSetSelectedYear,
+    counties,
+    handleSetCounties,
+    addingCounty,
+    handleSetAddingCounty,
+  }),
+  [
+    selectedCounty,
+    handleSelectedCounty,
+    measurements,
+    handleSetMeasurement,
+    indicators,
+    handleSetIndicators,
+    compareCounty,
+    handleSetCompareCounty,
+    selectedIndicator,
+    handleSetselectedIndicator,
+    selectedYear,
+    handleSetSelectedYear,
+    counties,
+    handleSetCounties,
+    addingCounty,
+    handleSetAddingCounty,
+  ]
+);
 
   return (
     <MapContext.Provider value={contextValue}>

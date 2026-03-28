@@ -34,7 +34,8 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
   useEffect(() => {
   handleSelectedCounty(null);
 }, [selectedIndicator, handleSelectedCounty]);
-
+  
+  const countiesRef = useRef(counties);
 
   useLayoutEffect(() => {
     if (addingCountyRef) {
@@ -43,6 +44,14 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
     } 
  
   }, [addingCounty]);
+
+
+  useEffect(() => {
+    countiesRef.current = counties;
+    
+  }, [counties]);
+
+
 
   const measurementMap = useMemo(() => {
     return new Map(measurements.map((m) => [m.countyFips, m.value]));
@@ -72,7 +81,7 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
     return (feature: any) => {
       const countyFips = feature?.properties?.GEOID;
       const value = measurementMap.get(countyFips);
-      const isSelected = selectedCounty?.countyFips === countyFips;
+      const isSelected = counties?.some((c) => c && c.countyFips === countyFips) ?? false;
 
       if (value == null || Number.isNaN(value)) {
         return {
@@ -93,53 +102,71 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
         weight: isSelected ? 3 : 1,
       };
     };
-  }, [measurementMap, minValue, maxValue, selectedCounty]);
+  }, [measurementMap, minValue, maxValue, counties]);
 
-    const onEachFeature = (feature: any, layer: any) => {
-    const countyFips = feature?.properties?.GEOID;
-    const countyName = `${feature?.properties?.NAME} County`;
+  const MAX_COUNTIES = 3;
 
-    layer.on({
-      click: () => {
-        if (!addingCountyRef.current && !counties?.includes({countyFips, countyName})) {
-          let temp_counties = counties ? [...counties] : [];
-          const center = layer.getBounds().getCenter();
+const onEachFeature = (feature: any, layer: any) => {
+  const countyFips = feature?.properties?.GEOID;
+  const countyName = `${feature?.properties?.NAME} County`;
 
-          handleSelectedCounty({
-            countyFips,
-            countyName,
-          });
+  layer.on({
+    click: () => {
+      const center = layer.getBounds().getCenter();
+      setPopupPosition(center);
 
-          temp_counties.push({ countyFips, countyName });
-          handleSetCounties(temp_counties);
-          setPopupPosition(center);
-          
+      const current = countiesRef.current ?? [];
+      const alreadySelected = current.some(
+        (c) => c && c.countyFips === countyFips
+      );
+
+      if (alreadySelected) {
+        return;
+      }
+
+      if (addingCountyRef.current) {
+        if (current.length >= MAX_COUNTIES) {
+          handleSetAddingCounty(false);
+          return;
         }
-        else if(addingCountyRef.current && !counties?.some(c => c && c.countyFips === countyFips)) {
-          handleAddCounty({
-            countyFips,
-            countyName,
-          });
-        }
-        
-      },
-    });
-  };
 
-
-   const handleAddCounty = (c: { countyFips: any; countyName: string; }) => {
-        let temp_counties = counties ? [...counties] : [];
-
-        temp_counties.push({ 
-          countyFips: c.countyFips, 
-          countyName: c.countyName 
+        handleAddCounty({
+          countyFips,
+          countyName,
         });
-
-        handleSetCounties(temp_counties);
-        handleSetAddingCounty(false);
+      } 
+      else if (current.length <= MAX_COUNTIES && ! addingCountyRef.current) {
+        handleSelectedCounty({
+          countyFips,
+          countyName,
+        });
         
+        handleSetCounties([{ countyFips, countyName }]);
+      }
+    },
+  });
+};
+
+const handleAddCounty = (c: { countyFips: string; countyName: string }) => {
+    const current = countiesRef.current ? [...countiesRef.current] : [];
+
+    const alreadySelected = current.some(
+      (x) => x && x.countyFips === c.countyFips
+    );
+
+    if (alreadySelected || current.length >= MAX_COUNTIES) {
+      handleSetAddingCounty(false);
+      return;
     }
 
+    current.push({
+      countyFips: c.countyFips,
+      countyName: c.countyName,
+    });
+
+    handleSetCounties(current);
+    handleSetAddingCounty(false);
+  };
   return (
     <div>
       <div style={{ marginBottom: "1rem" }}>
