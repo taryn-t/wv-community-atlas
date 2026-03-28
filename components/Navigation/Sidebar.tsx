@@ -119,8 +119,8 @@ export default function Sidebar() {
                                 getAriaValueText={valuetext}
                                 aria-labelledby="track-false-slider"
                                 disableSwap
-                                min={2019}
-                                max={2024}
+                                min={ACS_YEARS_CLIENT[0]}
+                                max={ACS_YEARS_CLIENT[ACS_YEARS_CLIENT.length - 1]}
                                 marks={marks}
                                 track={false}
                                  sx={{
