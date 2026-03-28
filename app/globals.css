@@ -100,7 +100,7 @@ button:hover{
   background: inherit;
   height: 100vh;
   overflow-y: scroll;
-  padding: 16px;
+  
   display: flex;
   flex-direction: row;
 }
@@ -112,6 +112,8 @@ button:hover{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  
+  padding: 16px;
 }
 .data-panel > div:not(:first-child){
   margin-top: 10px;
@@ -146,12 +148,9 @@ button:hover{
   font-size: var(--text-lg);
 }
 .side-bar .side-bar-drag{
-  position: absolute;
-  top: 0;
   width: 10px;
   height: 100%;
   cursor: ew-resize;
-  z-index: 1000;
   background-color: var(--bg-300);
 
   transition: background-color 1s ease;
@@ -257,7 +256,7 @@ button:hover{
   grid-auto-flow: column;
   grid-column-gap: 10px;
   flex-grow: 0;
-  
+
 }
 
 .county-pills > div{
