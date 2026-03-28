@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CountyTimeSeries from "../CountyTimeSeries";
 import { ACS_YEARS_CLIENT } from "./MapNav";
 import CountySelection from "./CountySelection";
-import DataPanel from "./DataPanel";
+import DataPanel, { RangeData } from "./DataPanel";
 
 
 export function parseNumber(value: number | null | undefined) {
@@ -56,13 +56,14 @@ export default function Sidebar() {
     loadRangeData();
 }, [counties, selectedIndicator, yearRange]);  
     
-    const handleChange = (event: Event, newValue: number[], activeThumb: number) => {
-            if (activeThumb === 0) {
+    const handleChange = (event: Event, newValue: number | number[], activeThumb: number) => {
+        if (!Array.isArray(newValue)) return;
+        if (activeThumb === 0) {
             setYearRange([Math.min(newValue[0], yearRange[1] - minDistance), yearRange[1]]);
-            } else {
+        } else {
             setYearRange([yearRange[0], Math.max(newValue[1], yearRange[0] + minDistance)]);
-            }
-        };
+        }
+    };
     
 
     useEffect(() => {
@@ -158,8 +159,8 @@ export default function Sidebar() {
                 <div className="data-panels" style={{gap: 16,gridColumn: `span ${countyData.length}`}}>
                    {countyData && countyData.length > 0
                     ? countyData.map((data, index) => {
-                        const matchingRangeData =
-                            rangeData.find((r) => r?.countyFips === data.county?.fips) ?? null;
+                        const matchingRangeData: RangeData | null =
+                            rangeData.find((r: RangeData) => r?.countyFips === data.county?.fips) ?? null;
 
                         return (
                             <DataPanel

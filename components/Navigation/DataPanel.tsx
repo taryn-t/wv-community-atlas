@@ -17,7 +17,7 @@ function valuetext(value: number) {
 }
 
 
-type RangeData = {
+export type RangeData = {
   countyFips: string;
   startValue: number | null;
   endValue: number | null;
