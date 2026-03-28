@@ -40,12 +40,9 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
     if (addingCountyRef) {
 
       addingCountyRef.current = addingCounty;
-      console.log("Add mode ON");
     } 
-    else {
-    console.log("Add mode OFF");
-    }
-   }, [addingCounty]);
+ 
+  }, [addingCounty]);
 
   const measurementMap = useMemo(() => {
     return new Map(measurements.map((m) => [m.countyFips, m.value]));

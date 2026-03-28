@@ -55,7 +55,6 @@ export default function MapNav(){
         if(selectedIndicator ){
             const measurementPromise = fetch(`/api/map-layer?indicatorKey=${selectedIndicator}&year=${selectedYear}`).then((res) => res.json());
             measurementPromise.then((data) => {
-                console.log(data)
                 handleSetMeasurement(data.data)
             }).catch((err) => {
                 console.error("Error fetching measurements for indicator:", err);
@@ -67,7 +66,6 @@ export default function MapNav(){
     if(selectedYear ){
             const measurementPromise = fetch(`/api/map-layer?indicatorKey=${selectedIndicator}&year=${selectedYear}`).then((res) => res.json());
             measurementPromise.then((data) => {
-                console.log(data)
                 handleSetMeasurement(data.data)
             }).catch((err) => {
                 console.error("Error fetching measurements for year:", err);

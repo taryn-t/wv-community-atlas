@@ -64,8 +64,7 @@ export default function CountyTimeSeries({
           {
             data: xData,
             scaleType: "point",
-            label: "Year",
-
+            valueFormatter: (year) => year.toString(),
           },
         ]}
         series={[
@@ -82,7 +81,8 @@ export default function CountyTimeSeries({
               stroke: "#dda400",
             },
             "& .MuiChartsAxis-root .MuiChartsAxis-tickLabel": {
-              fill: "#dda400",
+              fill: "#fff",
+              
             },
             "& .MuiChartsAxis-root .MuiChartsAxis-label": {
               fill: "#fff",

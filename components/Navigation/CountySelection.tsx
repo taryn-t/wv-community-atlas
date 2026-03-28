@@ -18,18 +18,17 @@ export default function CountySelection() {
         
     }
     
-    useEffect(() => {
+//     useEffect(() => {
     
-    if (addingCounty) {
-    console.log("addingCounty updated:", addingCounty);
-  } 
-    }, [addingCounty]);
+//     if (addingCounty) {
+//   } 
+//     }, [addingCounty]);
 
-    useEffect(() => {
-        if(counties){
-            console.log("counties updated:", counties);
-        }
-    }, [counties])
+//     useEffect(() => {
+//         if(counties){
+//             console.log("counties updated:", counties);
+//         }
+//     }, [counties])
 
 
 

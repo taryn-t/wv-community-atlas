@@ -51,7 +51,6 @@ export default function Sidebar() {
             setCountyData(null);
             return;
         }
-        console.log("selected indicator: "+ selectedIndicator)
         fetch(
             `/api/counties/${selectedCounty.countyFips}/${selectedIndicator}/${selectedYear}`,
             { cache: "no-store" }
@@ -65,9 +64,9 @@ export default function Sidebar() {
             });
     }, [selectedCounty, selectedIndicator, selectedYear]);
 
-    useEffect(() => {
-        console.log(countyData);
-    }, [countyData]);
+    // useEffect(() => {
+    //     console.log(countyData);
+    // }, [countyData]);
 
 
     useEffect(() => { 
@@ -78,7 +77,6 @@ export default function Sidebar() {
         .then((res) => res.json())
         .then((data) => {
             setRangeData(data.data[0]);
-            console.log(data);
         })
         .catch((err) => {
             console.error("Error fetching range data:", err);
@@ -172,34 +170,8 @@ export default function Sidebar() {
 
                         </div>
                         
-                        {/* <h2 className="">
-                            {countyData.indicators.name} 5 Year Summary({countyData.summary.baselineYear} vs {countyData.summary.latestYear})
-                        </h2>
-                        <h3>
-                            {countyData.summary.baselineYear}
-                        </h3>
-                        <p>{parseNumber(countyData.summary.baselineValue)}</p>
-                        <h3>
-                            {countyData.summary.latestYear}
-                        </h3>
-                        <p>{parseNumber(countyData.summary.latestValue)}</p>
-                        <h3>
-                            Maximum Value
-                        </h3>
-                        <p>{parseNumber(countyData.summary.maxValue)}</p>
-                        <h3>
-                            Minimum Value
-                        </h3>
-                        <p>{parseNumber(countyData.summary.minValue)}</p>
-                        <h3>
-                            Absolute Change ({countyData.summary.baselineYear} to {countyData.summary.latestYear})
-                        </h3>
-                        <p>{parseNumber(countyData.summary.absChangeSinceBaseline)}</p>
-                        <h3>
-                            Percent Change ({countyData.summary.baselineYear} to {countyData.summary.latestYear})
-                        </h3>
-                        <p>{parseNumber(countyData.summary.pctChangeSinceBaseline)}%</p> */}
-                    </div>
+        
+                   </div>
                     <div className="selected-data" style={{height: 400}}>
                         <h2>{`${countyData.indicators.name} Trend \n (${yearRange[0]} to ${yearRange[1]})`}</h2>
                         <CountyTimeSeries yearRange={yearRange} />

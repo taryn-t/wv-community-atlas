@@ -37,8 +37,6 @@ export async function POST(req: NextRequest) {
           success: true,
           countiesProcessed: result.countiesProcessed,
         });
-
-        console.log(`Finished ingestion for ${indicator.key} (${year})`);
       } catch (error) {
         console.error(`Failed ingestion for ${indicator.key} (${year})`, error);
 
