@@ -34,8 +34,9 @@ export default function RootLayout({
             <main >
               
               {children}
+              <Sidebar />
             </main>
-            <Sidebar />
+            
           </div>
         </MapContextProvider>
           

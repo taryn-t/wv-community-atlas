@@ -5,7 +5,7 @@ import { set } from "mongoose";
 import { useEffect, useRef, useState } from "react";
 
 
- const ACS_YEARS = [2019,2020,2021,2022, 2023, 2024] as const;
+ export const ACS_YEARS_CLIENT = [2018,2019,2020,2021,2022, 2023, 2024];
 
 export default function MapNav(){
     const {indicators, handleSetIndicators, selectedIndicator, handleSetselectedIndicator, measurements, handleSetMeasurement, selectedYear, handleSetSelectedYear} = useMapData();
@@ -83,7 +83,7 @@ export default function MapNav(){
                 </button>
                 {openYear && (
                     <ul className="year-filter" ref={yearRef}>
-                    {ACS_YEARS?.map((year, i) => (
+                    {ACS_YEARS_CLIENT?.map((year, i) => (
                         <li className={`year-btn ${selectedYear === year ? "selected" : ""}`} key={year} onClick={() => handleSetSelectedYear(year)} style={{ cursor: "pointer"}}>
                             {year}
                         </li>

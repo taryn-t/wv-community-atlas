@@ -1,6 +1,6 @@
 import { getDb } from "./mongodb";
 
- const ACS_YEARS = [2019,2020,2021,2022, 2023, 2024] as const;
+ export const ACS_YEARS = [2018,2019,2020,2021,2022, 2023, 2024] ;
 
 export type IndicatorYearMap = {
   [year: number]: string[];

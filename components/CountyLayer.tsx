@@ -1,7 +1,7 @@
 "use client";
 
 import { GeoJSON, Popup  } from "react-leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { normalize, lerpColor } from "@/lib/mapColors";
 import useMapData from "@/lib/hooks/useMapData";
 
@@ -23,12 +23,29 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
     selectedCounty,
     selectedIndicator,
     handleSelectedCounty,
+    counties,
+    handleSetCounties,
+    addingCounty,
+    handleSetAddingCounty
   } = useMapData();
   const [popupPosition, setPopupPosition] = useState<L.LatLng | null>(null);
+  const addingCountyRef = useRef(addingCounty);
 
   useEffect(() => {
   handleSelectedCounty(null);
 }, [selectedIndicator, handleSelectedCounty]);
+
+
+  useLayoutEffect(() => {
+    if (addingCountyRef) {
+
+      addingCountyRef.current = addingCounty;
+      console.log("Add mode ON");
+    } 
+    else {
+    console.log("Add mode OFF");
+    }
+   }, [addingCounty]);
 
   const measurementMap = useMemo(() => {
     return new Map(measurements.map((m) => [m.countyFips, m.value]));
@@ -81,33 +98,50 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
     };
   }, [measurementMap, minValue, maxValue, selectedCounty]);
 
-  const onEachFeature = (feature: any, layer: any) => {
+    const onEachFeature = (feature: any, layer: any) => {
     const countyFips = feature?.properties?.GEOID;
     const countyName = `${feature?.properties?.NAME} County`;
 
     layer.on({
       click: () => {
-        const currentValue = measurementMap.get(countyFips) ?? null;
-        const displayValue =
-          currentValue !== null
-            ? currentValue.toLocaleString(undefined, { maximumFractionDigits: 2 })
-            : "No data";
+        if (!addingCountyRef.current && !counties?.includes({countyFips, countyName})) {
+          let temp_counties = counties ? [...counties] : [];
+          const center = layer.getBounds().getCenter();
 
-        const center = layer.getBounds().getCenter();
-
-        handleSelectedCounty({
-          countyFips,
-          countyName,
-        });
-
-        handleSelectedCounty({
+          handleSelectedCounty({
             countyFips,
             countyName,
-            });
-            setPopupPosition(center);
+          });
+
+          temp_counties.push({ countyFips, countyName });
+          handleSetCounties(temp_counties);
+          setPopupPosition(center);
+          
+        }
+        else if(addingCountyRef.current && !counties?.some(c => c && c.countyFips === countyFips)) {
+          handleAddCounty({
+            countyFips,
+            countyName,
+          });
+        }
+        
       },
     });
   };
+
+
+   const handleAddCounty = (c: { countyFips: any; countyName: string; }) => {
+        let temp_counties = counties ? [...counties] : [];
+
+        temp_counties.push({ 
+          countyFips: c.countyFips, 
+          countyName: c.countyName 
+        });
+
+        handleSetCounties(temp_counties);
+        handleSetAddingCounty(false);
+        
+    }
 
   return (
     <div>
@@ -131,7 +165,7 @@ export default function CountyLayer({ geoJson, measurements }: Props) {
       </div>
 
       <GeoJSON
-        key={selectedIndicator}
+        key={`${selectedIndicator}-${addingCounty}`}
         data={geoJson}
         style={style}
         onEachFeature={onEachFeature}

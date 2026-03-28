@@ -21,6 +21,13 @@ interface MapContextProps {
     selectedYear: string | number;
     handleSetSelectedYear: (year: string | number ) => void;
 
+    counties: SelectedCounty[] | null;
+    handleSetCounties: (counties: SelectedCounty[] | null) => void;
+
+    addingCounty: boolean;
+    handleSetAddingCounty: (adding: boolean) => void;
+
+    
   }
 
 
@@ -40,6 +47,8 @@ const MapContextProvider: React.FC<{ children: React.ReactNode }> = ({
     const [compareCounty, setCompareCounty] = useState<string | null>(null);
     const [selectedIndicator, setselectedIndicator] = useState<string >("total_pop");
     const [selectedYear, setSelectedYear] = useState<string | number>(2024);
+    const [counties, setCounties] = useState<SelectedCounty[] | null>(null);
+    const [addingCounty, setAddingCounty] = useState<boolean>(false);
 
     const handleSelectedCounty = useCallback((county: SelectedCounty | null) => setSelectedCounty(county), []);
   const handleSetMeasurement = useCallback((measurements: Measurement[] | null) => setMeasurements(measurements), []);
@@ -47,6 +56,8 @@ const MapContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleSetCompareCounty = useCallback((county: string | null) => setCompareCounty(county), []);
   const handleSetselectedIndicator = useCallback((indicatorKey: string ) => setselectedIndicator(indicatorKey), []);
   const handleSetSelectedYear = useCallback((year: string  | number) => setSelectedYear(year), []);
+  const handleSetCounties = useCallback((counties: SelectedCounty[] | null) => setCounties(counties), []);
+  const handleSetAddingCounty = useCallback((adding: boolean) => setAddingCounty(adding), []);
 
   const contextValue = useMemo<MapContextProps>(
     () => ({
@@ -61,9 +72,14 @@ const MapContextProvider: React.FC<{ children: React.ReactNode }> = ({
       selectedIndicator,
       handleSetselectedIndicator,
       selectedYear,
-      handleSetSelectedYear
+      handleSetSelectedYear,
+      counties,
+      handleSetCounties,
+      addingCounty,
+      handleSetAddingCounty
+
     }),
-    [selectedCounty, handleSelectedCounty, measurements, handleSetMeasurement, indicators, handleSetIndicators, compareCounty, handleSetCompareCounty, selectedIndicator, handleSetselectedIndicator, selectedYear,handleSetSelectedYear]
+    [selectedCounty, handleSelectedCounty, measurements, handleSetMeasurement, indicators, handleSetIndicators, compareCounty, handleSetCompareCounty, selectedIndicator, handleSetselectedIndicator, selectedYear,handleSetSelectedYear, counties, handleSetCounties]
   );
 
   return (

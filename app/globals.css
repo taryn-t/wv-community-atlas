@@ -63,15 +63,16 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   height: 100vh;
+  width: 100vw;
 }
 main{
-  height: 100%;
+   display: flex;
+  flex-direction: row;
+  height: 100vh;
   width: 100%;
   position: relative;
-  display: flex;
- 
 }
 
 button{
@@ -80,36 +81,41 @@ button{
   border-radius: 5px;
   color: var(--text-100);
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  transition: background-color 0.6s ease;
+  cursor: pointer;
 }
 
+button:hover{
+  background-color: var(--accent-200);
+}
 
 .content{
-  display: flex;
-  flex-direction: row;
   height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
 
 }
 .side-bar{
   background: inherit;
-  height: 100%;
-  width: 500px;
+  height: 100vh;
   overflow-y: scroll;
   padding: 16px;
-
+  display: flex;
+  flex-direction: row;
 }
 
 .data-panel{
   background: inherit;
   height: 100%;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(1fr,auto);
-  grid-row-gap: 20px;
-  place-items: start;
-
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
-
+.data-panel > div:not(:first-child){
+  margin-top: 10px;
+}
 .selected-data{
   background-color: var(--bg-200);
   color: var(--text-100);
@@ -139,13 +145,27 @@ button{
   padding: 8px;
   font-size: var(--text-lg);
 }
+.side-bar .side-bar-drag{
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 1000;
+  background-color: var(--bg-300);
 
+  transition: background-color 1s ease;
+}
+.side-bar .side-bar-drag:hover{
+  background-color: var(--accent-200);
+}
 .map-container{
-  flex: 1;
   display: flex;
   height: 100%;
-  width: 100%;
+  width: auto;
   z-index: 1;
+  position: relative;
+  flex-grow: 1;
 }
 
 .map-nav{
@@ -219,4 +239,61 @@ button{
   background-color: var(--bg-300);
   color: var(--text-100);
   font-weight: bold;
+}
+
+.county-selection{
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.county-pills{
+  overflow-x: scroll;
+  display: grid;
+  grid-auto-flow: column;
+  grid-column-gap: 10px;
+  flex-grow: 0;
+  
+}
+
+.county-pills > div{
+  width:fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--accent-200);
+  border-radius: 25px;
+  padding: 12px;
+  flex-direction: row;
+  
+}
+
+.county-pills > div > * {
+  padding: 0;
+  color: var(--text-100);
+}
+
+.county-pills > div > p{
+  margin-right: 5px;
+}
+.add-county-container{
+  height: 50px;
+  width: 50px;
+  margin-left: 10px;
+}
+
+.add-county-container > .add-county-btn{
+  border-radius: 100%;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-100);
+  margin-top: 0;
+}
+
+.add-county-btn:hover{
+  background-color: var(--bg-200);
 }

@@ -4,42 +4,16 @@ import useMapData from "@/lib/hooks/useMapData";
 import Slider from '@mui/material/Slider';
 import { useEffect, useState } from "react";
 import CountyTimeSeries from "../CountyTimeSeries";
+import { ACS_YEARS_CLIENT } from "./MapNav";
+import CountySelection from "./CountySelection";
 
-const marks = [
-  {
-    value: 2019,
-    label: '2019',
-  },
-  {
-    value: 2020,
-    label: '2020',
-
-  },
-  {
-    value: 2021,
-    label: '2021',
-  },
-  {
-    value: 2022,
-    label: '2022',
-  },
-  {
-    value: 2023,
-    label: '2023',
-  },
-  {
-    value: 2024,
-    label: '2024',
-  },
-];
+const marks = ACS_YEARS_CLIENT.map((year) => ({ value: year, label: year.toString() }));
 
 export function parseNumber(value: number | null | undefined) {
     if (value === null || value === undefined) return "N/A";
     return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
 
-
- 
 const minDistance = 1;
 
 function valuetext(value: number) {
@@ -50,8 +24,9 @@ export default function Sidebar() {
     const { selectedCounty, selectedIndicator, selectedYear } = useMapData();
     const [countyData, setCountyData] = useState<any>(null);
     const [rangeData, setRangeData] = useState<any>(null);
+    const [barWidth, setBarWidth] = useState<number>(500);
     
-    const[yearRange, setYearRange] = useState<number[]>([2019, 2024]);
+    const[yearRange, setYearRange] = useState<number[]>([ACS_YEARS_CLIENT[0], ACS_YEARS_CLIENT[ACS_YEARS_CLIENT.length - 1]]);
 
     const handleChange = (event: Event, newValue: number[], activeThumb: number) => {
         if (activeThumb === 0) {
@@ -114,11 +89,13 @@ export default function Sidebar() {
 
      
     return (
-        <div className="side-bar">
+        <div className="side-bar" style={{width: barWidth}}>
+            <div className="side-bar-drag" style={{right: barWidth }}/>
             <div className="data-panel">
                 {countyData ? (
 
                     <>
+                    <CountySelection />
                     <div className="selected-data">
                         <h2 className="">
                             {countyData.county.name}
