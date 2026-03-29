@@ -154,7 +154,7 @@ export default function Sidebar() {
         <div className="side-bar" style={{ width: barWidth, maxWidth: barWidth, transition: "width 0.5s ease" }} ref={sidebarRef}>
             {/* <div className="side-bar-drag" style={{ width: 10, flexShrink: 0 }} onMouseDown={handleResize}/> */}
             
-            <div className="data-grid" style={{padding: 16, gridRow: "2 span 1", gridColumn: `span ${countyData.length}`}}>
+            <div className="data-grid" style={{ gridRow: "2 span 1", gridColumn: `span ${countyData.length}`}}>
                 <CountySelection colSpan={`span ${countyData.length}`} />
                 <div className="data-panels" style={{gap: 16,gridColumn: `span ${countyData.length}`}}>
                    {countyData && countyData.length > 0

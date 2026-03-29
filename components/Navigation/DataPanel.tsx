@@ -54,12 +54,12 @@ export default function DataPanel({ countyData, yearRange, handleChange, rangeDa
                         <h2 className="">
                             {countyData.county.name.split(" ")[0]} County
                         </h2>
-                        <h3>
+                        <h3 style={{paddingBottom: 10, borderBottom: "1px solid var(--primary-300)"}}>
                            {selectedYear} {countyData.indicators.name} 
                         </h3>
-                        <p>{parseNumber(countyData.measurement ? countyData.measurement.value : null)}</p>
+                        <p className="data-panel-p">{parseNumber(countyData.measurement ? countyData.measurement.value : null)}</p>
                        <h3>County Ranking</h3>
-                       <p>{countyData.summary.latestRank} / 55</p>
+                       <p className="data-panel-p">{countyData.summary.latestRank} / 55</p>
                     </div>
                     <div className="selected-data" >
                         <h2>Range Summary</h2>
@@ -103,16 +103,16 @@ export default function DataPanel({ countyData, yearRange, handleChange, rangeDa
                                 {rangeData ? (
                                     <div className="range-summary">
                                         <h3>{yearRange[0]} Value</h3>
-                                        <p>{parseNumber(rangeData.startValue)}</p>
+                                        <p className="data-panel-p">{parseNumber(rangeData.startValue)}</p>
 
                                         <h3>{yearRange[1]} Value</h3>
-                                        <p>{parseNumber(rangeData.endValue)}</p>
+                                        <p className="data-panel-p">{parseNumber(rangeData.endValue)}</p>
 
                                         <h3>Absolute Change ({yearRange[0]} to {yearRange[1]})</h3>
-                                        <p>{parseNumber(rangeData.absChange)}</p>
+                                        <p className="data-panel-p">{parseNumber(rangeData.absChange)}</p>
 
                                         <h3>Percent Change ({yearRange[0]} to {yearRange[1]})</h3>
-                                        <p>{parseNumber(rangeData.pctChange)}%</p>
+                                        <p className="data-panel-p">{parseNumber(rangeData.pctChange)}%</p>
                                     </div>
                                     ) : (
                                     <p>No range data available for the selected county and indicator.</p>
