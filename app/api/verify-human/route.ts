@@ -6,10 +6,17 @@ export const runtime = 'nodejs';
 
 function getGoogleCredentials() {
   const raw = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+
   if (!raw) {
     throw new Error('Missing GOOGLE_APPLICATION_CREDENTIALS_JSON');
   }
-  return JSON.parse(raw);
+
+  try {
+    return JSON.parse(raw);
+  } catch (err: any) {
+    console.error('Raw credentials prefix:', raw.slice(0, 80));
+    throw new Error(`Invalid GOOGLE_APPLICATION_CREDENTIALS_JSON: ${err.message}`);
+  }
 }
 
 function getRecaptchaClient() {

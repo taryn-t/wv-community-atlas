@@ -6,7 +6,11 @@ import { useState } from 'react';
 
 declare global {
   interface Window {
-    grecaptcha: any;
+    grecaptcha: {
+      enterprise: {
+        getResponse: (widgetId?: number) => string;
+      };
+    };
   }
 }
 
@@ -20,35 +24,33 @@ export default function VerifyHumanPage() {
     setLoading(true);
 
     try {
-      const token = window.grecaptcha?.getResponse();
+        
+      const token = window.grecaptcha?.enterprise?.getResponse();
 
       if (!token) {
         setError('Please complete the CAPTCHA first.');
-        setLoading(false);
         return;
       }
 
       const res = await fetch('/api/verify-human', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token,
-          action: 'site_gate',
-        }),
+        body: JSON.stringify({ token, action: 'site_gate' }),
       });
 
       const data = await res.json();
 
       if (!res.ok || !data.ok) {
         setError(data.error || 'Verification failed.');
-        setLoading(false);
         return;
       }
 
       router.push('/');
       router.refresh();
-    } catch (e) {
+    } catch (err) {
+      console.error(err);
       setError('Unexpected error during verification.');
+    } finally {
       setLoading(false);
     }
   }
