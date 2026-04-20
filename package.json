@@ -11,10 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@google-cloud/recaptcha-enterprise": "^6.4.0",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/x-charts": "^8.28.0",
     "axios": "^1.13.6",
+    "jose": "^6.2.2",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "mongodb": "7.1",
     "mongoose": "^9.3.0",
