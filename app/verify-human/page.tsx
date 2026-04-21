@@ -61,10 +61,10 @@ export default function VerifyHumanPage() {
         src="https://www.google.com/recaptcha/enterprise.js"
         strategy="afterInteractive"
       />
-
-      <h1 className="text-2xl font-semibold">Verify you’re human</h1>
+      <div>
+        <h1 className="text-2xl font-semibold">Verify you’re human</h1>
       <p className="mt-2 text-sm text-gray-600">
-        Complete the CAPTCHA to continue to the site.
+        Complete the CAPTCHA to continue.
       </p>
 
       <div
@@ -78,10 +78,12 @@ export default function VerifyHumanPage() {
         disabled={loading}
         className="mt-6 rounded bg-black px-4 py-2 text-white disabled:opacity-50"
       >
-        {loading ? 'Verifying...' : 'Enter site'}
+        {loading ? 'Verifying...' : 'Enter'}
       </button>
 
       {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      </div>
+      
     </main>
   );
 }
